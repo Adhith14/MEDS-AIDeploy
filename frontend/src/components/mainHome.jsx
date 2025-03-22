@@ -1,8 +1,7 @@
 import React from "react";
 import healthApp from "../assets/health.png";
-import logo from "../assets/medsai-logo2-white.png";
-import { Link } from "react-router-dom";
 import Squares from "./Squares";
+import Navbar from "./Navbar"; // Import the new Navbar component
 
 const HomePage = () => {
   return (
@@ -18,35 +17,8 @@ const HomePage = () => {
       />
       </div>
 
-      {/* Header */}
-      <header className="navigation-bar">
-        <div className="logo-container">
-          <img className="logo" src={logo} alt="image" /> 
-          <span className="app-name">MEDS-AI</span>
-        </div>
-        <ul className="nav-links">
-          <li>
-            <a href="#home" className="active">
-              Home
-            </a>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to= "/predict">Predict Disease</Link>
-          </li>
-          <li>
-            <a href="#doctors">Doctors</a>
-          </li>
-          <li>
-            <a href="#about">About Us</a>
-          </li>
-          <li>
-            <a href="#contact">Contact</a>
-          </li>
-        </ul>
-      </header>
+      {/* Navbar Component */}
+      {/* <Navbar /> */}
       <br />
 
       {/* Hero Section */}

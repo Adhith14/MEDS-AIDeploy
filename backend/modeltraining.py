@@ -1,220 +1,220 @@
-# import os
-# import joblib
-# import numpy as np
-# import pandas as pd
-# from sklearn.preprocessing import LabelEncoder
-# from sklearn.model_selection import train_test_split
-# from sklearn.svm import SVC
-# from sklearn.naive_bayes import GaussianNB
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.metrics import accuracy_score, confusion_matrix
+import os
+import joblib
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
 
-# # Load dataset
-# DATA_PATH_TRAIN = os.path.join("datasets", "Training.csv")
-# data = pd.read_csv(DATA_PATH_TRAIN).dropna(axis=1)
+# Load dataset
+DATA_PATH_TRAIN = os.path.join("datasets", "Training.csv")
+data = pd.read_csv(DATA_PATH_TRAIN).dropna(axis=1)
 
-# # Encode target values
-# label_encoder = LabelEncoder()
-# data["prognosis"] = label_encoder.fit_transform(data["prognosis"])
+# Encode target values
+label_encoder = LabelEncoder()
+data["prognosis"] = label_encoder.fit_transform(data["prognosis"])
 
-# # Split data into features and target
-# X = data.iloc[:, :-1]
-# y = data.iloc[:, -1]
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=24)
+# Split data into features and target
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=24)
 
-# # Initialize models
-# svm_model = SVC(probability=True)  # Enable probability estimates
-# nb_model = GaussianNB()
-# rf_model = RandomForestClassifier(random_state=18)
+# Initialize models
+svm_model = SVC(probability=True)  # Enable probability estimates
+nb_model = GaussianNB()
+rf_model = RandomForestClassifier(random_state=18)
 
-# # Train models
-# svm_model.fit(X_train, y_train)
-# nb_model.fit(X_train, y_train)
-# rf_model.fit(X_train, y_train)
+# Train models
+svm_model.fit(X_train, y_train)
+nb_model.fit(X_train, y_train)
+rf_model.fit(X_train, y_train)
 
-# # Define the models directory
-# MODELS_DIR = os.path.join("models")
-# os.makedirs(MODELS_DIR, exist_ok=True)
+# Define the models directory
+MODELS_DIR = os.path.join("ml_models")
+os.makedirs(MODELS_DIR, exist_ok=True)
 
-# # Save trained models and label encoder
-# joblib.dump(svm_model, os.path.join(MODELS_DIR, "svm_model.pkl"))
-# joblib.dump(nb_model, os.path.join(MODELS_DIR, "nb_model.pkl"))
-# joblib.dump(rf_model, os.path.join(MODELS_DIR, "rf_model.pkl"))
-# joblib.dump(label_encoder, os.path.join(MODELS_DIR, "label_encoder.pkl"))
+# Save trained models and label encoder
+joblib.dump(svm_model, os.path.join(MODELS_DIR, "svm_model.pkl"))
+joblib.dump(nb_model, os.path.join(MODELS_DIR, "nb_model.pkl"))
+joblib.dump(rf_model, os.path.join(MODELS_DIR, "rf_model.pkl"))
+joblib.dump(label_encoder, os.path.join(MODELS_DIR, "label_encoder.pkl"))
 
-# # Load test data for validation
-# DATA_PATH_TEST = os.path.join("datasets", "Testing.csv")
-# test_data = pd.read_csv(DATA_PATH_TEST).dropna(axis=1)
-# test_X = test_data.iloc[:, :-1]
-# test_Y = label_encoder.transform(test_data.iloc[:, -1])
+# Load test data for validation
+DATA_PATH_TEST = os.path.join("datasets", "Testing.csv")
+test_data = pd.read_csv(DATA_PATH_TEST).dropna(axis=1)
+test_X = test_data.iloc[:, :-1]
+test_Y = label_encoder.transform(test_data.iloc[:, -1])
 
-# # Make predictions using ensemble method
-# def get_ensemble_prediction(models, X):
-#     predictions = np.array([model.predict_proba(X) for model in models])
-#     # Average the probabilities from all models
-#     avg_proba = np.mean(predictions, axis=0)
-#     # Return the class with highest average probability
-#     return np.argmax(avg_proba, axis=1)
+# Make predictions using ensemble method
+def get_ensemble_prediction(models, X):
+    predictions = np.array([model.predict_proba(X) for model in models])
+    # Average the probabilities from all models
+    avg_proba = np.mean(predictions, axis=0)
+    # Return the class with highest average probability
+    return np.argmax(avg_proba, axis=1)
 
-# # Get ensemble predictions
-# final_preds = get_ensemble_prediction([svm_model, nb_model, rf_model], test_X)
+# Get ensemble predictions
+final_preds = get_ensemble_prediction([svm_model, nb_model, rf_model], test_X)
 
-# # Evaluate accuracy
-# accuracy = accuracy_score(test_Y, final_preds)
-# print(f"Ensemble Model Accuracy: {accuracy * 100:.2f}%")
+# Evaluate accuracy
+accuracy = accuracy_score(test_Y, final_preds)
+print(f"Ensemble Model Accuracy: {accuracy * 100:.2f}%")
 
-# # Store model metadata
-# symptoms = X.columns.values
-# symptom_index = {symptom.replace("_", " ").capitalize(): idx for idx, symptom in enumerate(symptoms)}
-# prediction_classes = label_encoder.classes_
+# Store model metadata
+symptoms = X.columns.values
+symptom_index = {symptom.replace("_", " ").capitalize(): idx for idx, symptom in enumerate(symptoms)}
+prediction_classes = label_encoder.classes_
 
-# # Save metadata
-# metadata = {
-#     "symptoms": symptoms.tolist(),
-#     "symptom_index": symptom_index,
-#     "prediction_classes": prediction_classes.tolist()
-# }
-# joblib.dump(metadata, os.path.join(MODELS_DIR, "metadata.pkl"))
+# Save metadata
+metadata = {
+    "symptoms": symptoms.tolist(),
+    "symptom_index": symptom_index,
+    "prediction_classes": prediction_classes.tolist()
+}
+joblib.dump(metadata, os.path.join(MODELS_DIR, "metadata.pkl"))
 
 
 ##########################
 ####################################################enhanced ensemble model####################################################
 #############################
 
-import os
-import joblib
-import numpy as np
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.svm import SVC
-from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.feature_selection import SelectKBest, mutual_info_classif
-from imblearn.over_sampling import SMOTE
+# import os
+# import joblib
+# import numpy as np
+# import pandas as pd
+# from sklearn.preprocessing import LabelEncoder, StandardScaler
+# from sklearn.model_selection import train_test_split, GridSearchCV
+# from sklearn.svm import SVC
+# from sklearn.naive_bayes import GaussianNB
+# from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+# from sklearn.metrics import accuracy_score, classification_report
+# from sklearn.feature_selection import SelectKBest, mutual_info_classif
+# from imblearn.over_sampling import SMOTE
 
-# Load and preprocess dataset
-def load_and_preprocess_data(data_path):
-    data = pd.read_csv(data_path).dropna(axis=1)
-    return data
+# # Load and preprocess dataset
+# def load_and_preprocess_data(data_path):
+#     data = pd.read_csv(data_path).dropna(axis=1)
+#     return data
 
-# Feature selection using mutual information
-def select_features(X, y, n_features=100):
-    selector = SelectKBest(score_func=mutual_info_classif, k=n_features)
-    X_selected = selector.fit_transform(X, y)
-    selected_features = X.columns[selector.get_support()].tolist()
-    return X_selected, selector, selected_features
+# # Feature selection using mutual information
+# def select_features(X, y, n_features=100):
+#     selector = SelectKBest(score_func=mutual_info_classif, k=n_features)
+#     X_selected = selector.fit_transform(X, y)
+#     selected_features = X.columns[selector.get_support()].tolist()
+#     return X_selected, selector, selected_features
 
-# Hyperparameter tuning for models
-def tune_models():
-    svm_params = {
-        'C': [0.1, 1, 10],
-        'kernel': ['rbf', 'linear'],
-        'gamma': ['scale', 'auto']
-    }
+# # Hyperparameter tuning for models
+# def tune_models():
+#     svm_params = {
+#         'C': [0.1, 1, 10],
+#         'kernel': ['rbf', 'linear'],
+#         'gamma': ['scale', 'auto']
+#     }
     
-    rf_params = {
-        'n_estimators': [100, 200],
-        'max_depth': [10, 20, None],
-        'min_samples_split': [2, 5],
-        'min_samples_leaf': [1, 2]
-    }
+#     rf_params = {
+#         'n_estimators': [100, 200],
+#         'max_depth': [10, 20, None],
+#         'min_samples_split': [2, 5],
+#         'min_samples_leaf': [1, 2]
+#     }
     
-    return svm_params, rf_params
+#     return svm_params, rf_params
 
-# Main execution
-if __name__ == "__main__":
-    # Load datasets
-    DATA_PATH_TRAIN = os.path.join("datasets", "Training.csv")
-    DATA_PATH_TEST = os.path.join("datasets", "Testing.csv")
+# # Main execution
+# if __name__ == "__main__":
+#     # Load datasets
+#     DATA_PATH_TRAIN = os.path.join("datasets", "Training.csv")
+#     DATA_PATH_TEST = os.path.join("datasets", "Testing.csv")
     
-    train_data = load_and_preprocess_data(DATA_PATH_TRAIN)
-    test_data = load_and_preprocess_data(DATA_PATH_TEST)
+#     train_data = load_and_preprocess_data(DATA_PATH_TRAIN)
+#     test_data = load_and_preprocess_data(DATA_PATH_TEST)
     
-    # Encode target values
-    label_encoder = LabelEncoder()
-    train_data["prognosis"] = label_encoder.fit_transform(train_data["prognosis"])
+#     # Encode target values
+#     label_encoder = LabelEncoder()
+#     train_data["prognosis"] = label_encoder.fit_transform(train_data["prognosis"])
     
-    # Split data
-    X = train_data.iloc[:, :-1]
-    y = train_data.iloc[:, -1]
+#     # Split data
+#     X = train_data.iloc[:, :-1]
+#     y = train_data.iloc[:, -1]
     
-    # Feature selection
-    X_selected, selector, selected_features = select_features(X, y)
+#     # Feature selection
+#     X_selected, selector, selected_features = select_features(X, y)
     
-    # Split into train and validation sets
-    X_train, X_val, y_train, y_val = train_test_split(X_selected, y, test_size=0.2, random_state=42)
+#     # Split into train and validation sets
+#     X_train, X_val, y_train, y_val = train_test_split(X_selected, y, test_size=0.2, random_state=42)
     
-    # Apply SMOTE for handling class imbalance
-    smote = SMOTE(random_state=42)
-    X_train_balanced, y_train_balanced = smote.fit_resample(X_train, y_train)
+#     # Apply SMOTE for handling class imbalance
+#     smote = SMOTE(random_state=42)
+#     X_train_balanced, y_train_balanced = smote.fit_resample(X_train, y_train)
     
-    # Scale features
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train_balanced)
-    X_val_scaled = scaler.transform(X_val)
+#     # Scale features
+#     scaler = StandardScaler()
+#     X_train_scaled = scaler.fit_transform(X_train_balanced)
+#     X_val_scaled = scaler.transform(X_val)
     
-    # Initialize and tune base models
-    svm_params, rf_params = tune_models()
+#     # Initialize and tune base models
+#     svm_params, rf_params = tune_models()
     
-    svm = GridSearchCV(SVC(probability=True), svm_params, cv=5)
-    rf = GridSearchCV(RandomForestClassifier(random_state=42), rf_params, cv=5)
-    nb = GaussianNB()
+#     svm = GridSearchCV(SVC(probability=True), svm_params, cv=5)
+#     rf = GridSearchCV(RandomForestClassifier(random_state=42), rf_params, cv=5)
+#     nb = GaussianNB()
     
-    # Train base models
-    svm.fit(X_train_scaled, y_train_balanced)
-    rf.fit(X_train_scaled, y_train_balanced)
-    nb.fit(X_train_scaled, y_train_balanced)
+#     # Train base models
+#     svm.fit(X_train_scaled, y_train_balanced)
+#     rf.fit(X_train_scaled, y_train_balanced)
+#     nb.fit(X_train_scaled, y_train_balanced)
     
-    # Create voting classifier
-    voting_clf = VotingClassifier(
-        estimators=[
-            ('svm', svm.best_estimator_),
-            ('rf', rf.best_estimator_),
-            ('nb', nb)
-        ],
-        voting='soft',
-        weights=[2, 3, 1]  # Giving more weight to Random Forest
-    )
+#     # Create voting classifier
+#     voting_clf = VotingClassifier(
+#         estimators=[
+#             ('svm', svm.best_estimator_),
+#             ('rf', rf.best_estimator_),
+#             ('nb', nb)
+#         ],
+#         voting='soft',
+#         weights=[2, 3, 1]  # Giving more weight to Random Forest
+#     )
     
-    # Train voting classifier
-    voting_clf.fit(X_train_scaled, y_train_balanced)
+#     # Train voting classifier
+#     voting_clf.fit(X_train_scaled, y_train_balanced)
     
-    # Prepare test data
-    test_X = test_data.iloc[:, :-1]
-    test_Y = label_encoder.transform(test_data.iloc[:, -1])
+#     # Prepare test data
+#     test_X = test_data.iloc[:, :-1]
+#     test_Y = label_encoder.transform(test_data.iloc[:, -1])
     
-    # Apply feature selection and scaling to test data
-    test_X_selected = selector.transform(test_X)
-    test_X_scaled = scaler.transform(test_X_selected)
+#     # Apply feature selection and scaling to test data
+#     test_X_selected = selector.transform(test_X)
+#     test_X_scaled = scaler.transform(test_X_selected)
     
-    # Make predictions
-    y_pred = voting_clf.predict(test_X_scaled)
+#     # Make predictions
+#     y_pred = voting_clf.predict(test_X_scaled)
     
-    # Calculate accuracy
-    accuracy = accuracy_score(test_Y, y_pred)
-    print(f"\nImproved Ensemble Model Accuracy: {accuracy * 100:.2f}%")
-    print("\nDetailed Classification Report:")
-    print(classification_report(test_Y, y_pred, target_names=label_encoder.classes_))
+#     # Calculate accuracy
+#     accuracy = accuracy_score(test_Y, y_pred)
+#     print(f"\nImproved Ensemble Model Accuracy: {accuracy * 100:.2f}%")
+#     print("\nDetailed Classification Report:")
+#     print(classification_report(test_Y, y_pred, target_names=label_encoder.classes_))
     
-    # Create models directory
-    MODELS_DIR = os.path.join("ml_models")
-    os.makedirs(MODELS_DIR, exist_ok=True)
+#     # Create models directory
+#     MODELS_DIR = os.path.join("ml_models")
+#     os.makedirs(MODELS_DIR, exist_ok=True)
     
-    # Save models and preprocessing objects
-    joblib.dump(voting_clf, os.path.join(MODELS_DIR, "voting_clf.pkl"))
-    joblib.dump(selector, os.path.join(MODELS_DIR, "feature_selector.pkl"))
-    joblib.dump(scaler, os.path.join(MODELS_DIR, "scaler.pkl"))
-    joblib.dump(label_encoder, os.path.join(MODELS_DIR, "label_encoder.pkl"))
+#     # Save models and preprocessing objects
+#     joblib.dump(voting_clf, os.path.join(MODELS_DIR, "voting_clf.pkl"))
+#     joblib.dump(selector, os.path.join(MODELS_DIR, "feature_selector.pkl"))
+#     joblib.dump(scaler, os.path.join(MODELS_DIR, "scaler.pkl"))
+#     joblib.dump(label_encoder, os.path.join(MODELS_DIR, "label_encoder.pkl"))
     
-    # Save metadata
-    metadata = {
-        "selected_features": selected_features,
-        "prediction_classes": label_encoder.classes_.tolist(),
-        "feature_importance": dict(zip(selected_features, selector.scores_))
-    }
-    joblib.dump(metadata, os.path.join(MODELS_DIR, "metadata.pkl"))
+#     # Save metadata
+#     metadata = {
+#         "selected_features": selected_features,
+#         "prediction_classes": label_encoder.classes_.tolist(),
+#         "feature_importance": dict(zip(selected_features, selector.scores_))
+#     }
+#     joblib.dump(metadata, os.path.join(MODELS_DIR, "metadata.pkl"))
 
 #################
 ################################################### dl model ##################################################

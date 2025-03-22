@@ -1,167 +1,167 @@
-# import joblib
-# import numpy as np
-# import os
+import joblib
+import numpy as np
+import os
 
-# # Load models and metadata once at startup
-# MODELS_DIR = "ml_models"
-# svm_model = joblib.load(os.path.join(MODELS_DIR, "svm_model.pkl"))
-# nb_model = joblib.load(os.path.join(MODELS_DIR, "nb_model.pkl"))
-# rf_model = joblib.load(os.path.join(MODELS_DIR, "rf_model.pkl"))
-# label_encoder = joblib.load(os.path.join(MODELS_DIR, "label_encoder.pkl"))
-# metadata = joblib.load(os.path.join(MODELS_DIR, "metadata.pkl"))
+# Load models and metadata once at startup
+MODELS_DIR = "ml_models"
+svm_model = joblib.load(os.path.join(MODELS_DIR, "svm_model.pkl"))
+nb_model = joblib.load(os.path.join(MODELS_DIR, "nb_model.pkl"))
+rf_model = joblib.load(os.path.join(MODELS_DIR, "rf_model.pkl"))
+label_encoder = joblib.load(os.path.join(MODELS_DIR, "label_encoder.pkl"))
+metadata = joblib.load(os.path.join(MODELS_DIR, "metadata.pkl"))
 
-# symptom_index = metadata["symptom_index"]
-# prediction_classes = metadata["prediction_classes"]
+symptom_index = metadata["symptom_index"]
+prediction_classes = metadata["prediction_classes"]
 
-# def get_ensemble_prediction(models, X):
-#     """Get the ensemble prediction by averaging probabilities."""
-#     predictions = np.array([model.predict_proba(X) for model in models])
-#     avg_proba = np.mean(predictions, axis=0)
-#     return prediction_classes[np.argmax(avg_proba, axis=1)[0]]
+def get_ensemble_prediction(models, X):
+    """Get the ensemble prediction by averaging probabilities."""
+    predictions = np.array([model.predict_proba(X) for model in models])
+    avg_proba = np.mean(predictions, axis=0)
+    return prediction_classes[np.argmax(avg_proba, axis=1)[0]]
 
-# def predict_disease(input_json):
-#     """Handles the disease prediction logic."""
+def predict_disease(input_json):
+    """Handles the disease prediction logic."""
     
-#     input_symptoms = input_json.get("symptoms", [])
+    input_symptoms = input_json.get("symptoms", [])
 
-#     # Convert input symptoms to model-compatible format
-#     input_data = [0] * len(symptom_index)
-#     for symptom in input_symptoms:
-#         symptom = symptom.capitalize()
-#         if symptom in symptom_index:
-#             input_data[symptom_index[symptom]] = 1
+    # Convert input symptoms to model-compatible format
+    input_data = [0] * len(symptom_index)
+    for symptom in input_symptoms:
+        symptom = symptom.capitalize()
+        if symptom in symptom_index:
+            input_data[symptom_index[symptom]] = 1
 
-#     input_data = np.array(input_data).reshape(1, -1)
+    input_data = np.array(input_data).reshape(1, -1)
 
-#     # Get individual model predictions
-#     rf_pred = prediction_classes[rf_model.predict(input_data)[0]]
-#     nb_pred = prediction_classes[nb_model.predict(input_data)[0]]
-#     svm_pred = prediction_classes[svm_model.predict(input_data)[0]]
+    # Get individual model predictions
+    rf_pred = prediction_classes[rf_model.predict(input_data)[0]]
+    nb_pred = prediction_classes[nb_model.predict(input_data)[0]]
+    svm_pred = prediction_classes[svm_model.predict(input_data)[0]]
 
-#     # Get ensemble prediction
-#     final_pred = get_ensemble_prediction([rf_model, nb_model, svm_model], input_data)
+    # Get ensemble prediction
+    final_pred = get_ensemble_prediction([rf_model, nb_model, svm_model], input_data)
 
-#     return {
-#         "rf_prediction": rf_pred,
-#         "nb_prediction": nb_pred,
-#         "svm_prediction": svm_pred,
-#         "final_prediction": final_pred,
-#         "confidence_scores": {
-#             "rf": float(max(rf_model.predict_proba(input_data)[0])),
-#             "nb": float(max(nb_model.predict_proba(input_data)[0])),
-#             "svm": float(max(svm_model.predict_proba(input_data)[0]))
-#         }
-#     }
+    return {
+        "rf_prediction": rf_pred,
+        "nb_prediction": nb_pred,
+        "svm_prediction": svm_pred,
+        "final_prediction": final_pred,
+        "confidence_scores": {
+            "rf": float(max(rf_model.predict_proba(input_data)[0])),
+            "nb": float(max(nb_model.predict_proba(input_data)[0])),
+            "svm": float(max(svm_model.predict_proba(input_data)[0]))
+        }
+    }
 
 
 ####################
 ############################################ensemble model############################################
 ###############
 
-import joblib
-import numpy as np
-import pandas as pd
-import os
-from typing import List, Dict, Any
-from scipy.stats import mode
+# import joblib
+# import numpy as np
+# import pandas as pd
+# import os
+# from typing import List, Dict, Any
+# from scipy.stats import mode
 
-# Load models and preprocessing objects
-MODELS_DIR = "ml_models"
-voting_clf = joblib.load(os.path.join(MODELS_DIR, "voting_clf.pkl"))
-feature_selector = joblib.load(os.path.join(MODELS_DIR, "feature_selector.pkl"))
-scaler = joblib.load(os.path.join(MODELS_DIR, "scaler.pkl"))
-label_encoder = joblib.load(os.path.join(MODELS_DIR, "label_encoder.pkl"))
-metadata = joblib.load(os.path.join(MODELS_DIR, "metadata.pkl"))
+# # Load models and preprocessing objects
+# MODELS_DIR = "ml_models"
+# voting_clf = joblib.load(os.path.join(MODELS_DIR, "voting_clf.pkl"))
+# feature_selector = joblib.load(os.path.join(MODELS_DIR, "feature_selector.pkl"))
+# scaler = joblib.load(os.path.join(MODELS_DIR, "scaler.pkl"))
+# label_encoder = joblib.load(os.path.join(MODELS_DIR, "label_encoder.pkl"))
+# metadata = joblib.load(os.path.join(MODELS_DIR, "metadata.pkl"))
 
-# Get metadata
-selected_features = metadata["selected_features"]
-prediction_classes = metadata["prediction_classes"]
-symptom_index = {symptom: idx for idx, symptom in enumerate(selected_features)}
+# # Get metadata
+# selected_features = metadata["selected_features"]
+# prediction_classes = metadata["prediction_classes"]
+# symptom_index = {symptom: idx for idx, symptom in enumerate(selected_features)}
 
-def normalize_symptom(symptom: str) -> str:
-    """Normalize symptom string for consistent matching."""
-    return ' '.join(word.capitalize() for word in symptom.strip().split())
+# def normalize_symptom(symptom: str) -> str:
+#     """Normalize symptom string for consistent matching."""
+#     return ' '.join(word.capitalize() for word in symptom.strip().split())
 
-def validate_symptoms(symptoms: List[str]) -> List[str]:
-    """Validate and normalize input symptoms."""
-    if not symptoms or not isinstance(symptoms, list):
-        raise ValueError("Symptoms must be provided as a non-empty list")
+# def validate_symptoms(symptoms: List[str]) -> List[str]:
+#     """Validate and normalize input symptoms."""
+#     if not symptoms or not isinstance(symptoms, list):
+#         raise ValueError("Symptoms must be provided as a non-empty list")
     
-    if len(symptoms) > 10:
-        raise ValueError("Maximum 10 symptoms allowed")
+#     if len(symptoms) > 10:
+#         raise ValueError("Maximum 10 symptoms allowed")
     
-    valid_symptoms = []
-    for symptom in symptoms:
-        norm_symptom = normalize_symptom(symptom)
-        if norm_symptom in symptom_index:
-            valid_symptoms.append(norm_symptom)
+#     valid_symptoms = []
+#     for symptom in symptoms:
+#         norm_symptom = normalize_symptom(symptom)
+#         if norm_symptom in symptom_index:
+#             valid_symptoms.append(norm_symptom)
     
-    if not valid_symptoms:
-        raise ValueError("No valid symptoms provided")
+#     if not valid_symptoms:
+#         raise ValueError("No valid symptoms provided")
     
-    return valid_symptoms
+#     return valid_symptoms
 
-def create_feature_vector(symptoms: List[str]) -> pd.DataFrame:
-    """Create a pandas DataFrame with proper feature names."""
-    # Initialize a zero-filled dictionary with all features
-    feature_dict = {feature: 0 for feature in selected_features}
+# def create_feature_vector(symptoms: List[str]) -> pd.DataFrame:
+#     """Create a pandas DataFrame with proper feature names."""
+#     # Initialize a zero-filled dictionary with all features
+#     feature_dict = {feature: 0 for feature in selected_features}
     
-    # Set 1 for present symptoms
-    for symptom in symptoms:
-        if symptom in feature_dict:
-            feature_dict[symptom] = 1
+#     # Set 1 for present symptoms
+#     for symptom in symptoms:
+#         if symptom in feature_dict:
+#             feature_dict[symptom] = 1
     
-    # Create DataFrame with a single row
-    return pd.DataFrame([feature_dict])
+#     # Create DataFrame with a single row
+#     return pd.DataFrame([feature_dict])
 
-def predict_disease(input_json: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Handle disease prediction with improved model pipeline.
+# def predict_disease(input_json: Dict[str, Any]) -> Dict[str, Any]:
+#     """
+#     Handle disease prediction with improved model pipeline.
     
-    Args:
-        input_json: Dictionary containing symptoms list
+#     Args:
+#         input_json: Dictionary containing symptoms list
     
-    Returns:
-        Dictionary containing predictions and confidence scores
-    """
-    try:
-        # Validate input symptoms
-        input_symptoms = validate_symptoms(input_json.get("symptoms", []))
+#     Returns:
+#         Dictionary containing predictions and confidence scores
+#     """
+#     try:
+#         # Validate input symptoms
+#         input_symptoms = validate_symptoms(input_json.get("symptoms", []))
         
-        # Create feature DataFrame with proper column names
-        input_data = create_feature_vector(input_symptoms)
+#         # Create feature DataFrame with proper column names
+#         input_data = create_feature_vector(input_symptoms)
         
-        # Apply feature selection and scaling
-        input_data_selected = feature_selector.transform(input_data)
-        input_data_scaled = scaler.transform(input_data_selected)
+#         # Apply feature selection and scaling
+#         input_data_selected = feature_selector.transform(input_data)
+#         input_data_scaled = scaler.transform(input_data_selected)
         
-        # Get predictions from voting classifier
-        final_prediction = voting_clf.predict(input_data_scaled)[0]
-        probabilities = voting_clf.predict_proba(input_data_scaled)[0]
+#         # Get predictions from voting classifier
+#         final_prediction = voting_clf.predict(input_data_scaled)[0]
+#         probabilities = voting_clf.predict_proba(input_data_scaled)[0]
         
-        # Get individual model predictions
-        predictions = {}
-        confidence_scores = {}
+#         # Get individual model predictions
+#         predictions = {}
+#         confidence_scores = {}
         
-        for idx, (name, model) in enumerate(voting_clf.named_estimators_.items()):
-            pred = model.predict(input_data_scaled)[0]
-            proba = model.predict_proba(input_data_scaled)[0]
+#         for idx, (name, model) in enumerate(voting_clf.named_estimators_.items()):
+#             pred = model.predict(input_data_scaled)[0]
+#             proba = model.predict_proba(input_data_scaled)[0]
             
-            model_name = name.lower()  # rf, nb, or svm
-            predictions[f"{model_name}_prediction"] = prediction_classes[pred]
-            confidence_scores[model_name] = float(max(proba))
+#             model_name = name.lower()  # rf, nb, or svm
+#             predictions[f"{model_name}_prediction"] = prediction_classes[pred]
+#             confidence_scores[model_name] = float(max(proba))
         
-        return {
-            **predictions,
-            "final_prediction": prediction_classes[final_prediction],
-            "confidence_scores": confidence_scores,
-            "input_symptoms": input_symptoms
-        }
+#         return {
+#             **predictions,
+#             "final_prediction": prediction_classes[final_prediction],
+#             "confidence_scores": confidence_scores,
+#             "input_symptoms": input_symptoms
+#         }
         
-    except ValueError as e:
-        raise ValueError(str(e))
-    except Exception as e:
-        raise Exception(f"Prediction failed: {str(e)}")
+#     except ValueError as e:
+#         raise ValueError(str(e))
+#     except Exception as e:
+#         raise Exception(f"Prediction failed: {str(e)}")
     
 ######################
 ########################################dl model############################################
