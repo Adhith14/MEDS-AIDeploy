@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 /* Global Styles */
 .homepage-container {
   font-family: Arial, sans-serif;
@@ -14,7 +12,6 @@
   min-height: 100vh;
   overflow: hidden;
 }
-
 
 /* Header Section - No Box */
 .homepage-header {
@@ -37,19 +34,18 @@
   transition: transform 0.3s ease; /* Smooth scaling effect */
 }
 
-
-
 .logo:hover {
   transform: scale(1.1); /* Slight zoom on hover */
 }
 
 .app-name {
   font-size: 1.8rem;
-  font-weight:bolder;
+  font-weight: bolder;
   color: white; /* White for contrast */
   text-transform: uppercase;
   letter-spacing: 1px; /* Subtle spacing for elegance */
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .navigation-bar {
@@ -60,13 +56,13 @@
   position: relative;
   top: 0;
   z-index: 10;
-  border-radius: 8px;
+  /* border-radius: 8px; */
 
-  background: rgba( 255, 111, 0, 0.35 );
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 4.5px );
--webkit-backdrop-filter: blur( 4.5px );
-border: 1px solid rgba( 255, 255, 255, 0.18 );
+  background: #7fb2e6;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4.5px);
+  -webkit-backdrop-filter: blur(4.5px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .nav-links {
@@ -91,14 +87,14 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .nav-links a:hover {
-  background-color: #E65100; /* Darker orange on hover */
-  color: #FFFBEA; /* Light beige text on hover */
+  background-color: #e65100; /* Darker orange on hover */
+  color: #fffbea; /* Light beige text on hover */
 }
 
 /* Active Link Indicator */
 .nav-links .active {
-  background-color: #E65100; /* Highlight active link */
-  color: #FFFBEA;
+  background-color: #f67d20; /* Highlight active link */
+  color: #fffbea;
   font-weight: bold;
 }
 
@@ -112,7 +108,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
   position: absolute;
   top: 100%; /* Position below the link */
   left: 0;
-  background-color: #FF8F00; /* Slightly lighter orange */
+  background-color: #ff8f00; /* Slightly lighter orange */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   border-radius: 5px;
   overflow: hidden;
@@ -127,7 +123,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .dropdown a:hover {
-  background-color: #E65100;
+  background-color: #e65100;
 }
 
 /* Responsive Adjustments */
@@ -146,7 +142,11 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
   border-radius: 8px;
 
   /* Add gradient background */
-  background: linear-gradient(to right, #FF6F00, #FF8F00); /* Bright Orange Gradient */
+  background: linear-gradient(
+    to right,
+    #0066cc,
+    #0088ff
+  ); /* Bright Orange Gradient */
 
   /* Glassmorphism overlay effect */
   position: relative;
@@ -162,14 +162,13 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.15); /* Slightly more transparent overlay */
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3); /* Reduce shadow intensity */
+  box-shadow: 0 8px 32px 0 rgba(0, 51, 102, 0.3); /* Reduce shadow intensity */
   backdrop-filter: blur(4.5px);
   -webkit-backdrop-filter: blur(4.5px);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.12); /* More transparent border */
   z-index: -1; /* Push the glassmorphism layer behind the content */
 }
-
 
 .hero-title {
   font-size: 2.5rem;
@@ -193,7 +192,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .cta-buttons .cta-btn:hover {
-  background-color: #E65100; /* Darker Orange on hover */
+  background-color: #e65100; /* Darker Orange on hover */
 }
 
 /* Features Section (Two Cards per Row) */
@@ -211,16 +210,16 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .feature-card {
-  background-color: #fff6e8; /* White background for cards */
+  background-color: #e6f0ff; /* Light blue background for cards */
   border-radius: 10px;
   padding: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 102, 204, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
 }
 
 .feature-card:hover {
   transform: translateY(-10px); /* Slight lift effect */
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+  box-shadow: 0 8px 12px rgba(0, 102, 204, 0.3); /* Darker shadow on hover */
 }
 
 .feature-title {
@@ -236,7 +235,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 
 /* Footer Section - Light Background and No Box */
 .homepage-footer {
-  background-color: #FF6F00; /* Orange background for footer */
+  background-color: #0066cc; /* Blue background for footer */
   color: white; /* White text to contrast against orange */
   padding: 2rem;
   text-align: center;
@@ -262,7 +261,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 
 .download-links .download-btn {
   background-color: white;
-  color: #FF6F00; /* Bright Orange text */
+  color: #ff6f00; /* Bright Orange text */
   padding: 0.8rem 1.5rem;
   margin: 0.5rem;
   border-radius: 5px;
@@ -271,7 +270,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .download-links .download-btn:hover {
-  background-color: #E65100; /* Darker Orange on hover */
+  background-color: #e65100; /* Darker Orange on hover */
   color: white;
 }
 .hero-image {
@@ -280,15 +279,12 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
   object-fit: contain; /* Ensure the image does not get distorted */
 }
 
-
-
 .squares-canvas {
   width: 100%;
   height: 100%;
   border: none;
   display: block; /* Remove default margin/padding of canvas */
 }
-
 
 .prediction-container {
   display: flex;
@@ -310,14 +306,15 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 
 /* Prediction Box - Glassmorphism Effect */
 .prediction-box {
-  background: rgba(255, 255, 255, 0.15); /* Semi-transparent White */
+  background: rgba(0, 102, 204, 0.15); /* Semi-transparent blue */
   backdrop-filter: blur(12px); /* Glassmorphism Effect */
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Light Border */
-  box-shadow: 0 8px 12px rgba(255, 255, 255, 0.2); /* Soft Glow Effect */
+  border: 1px solid rgba(0, 102, 204, 0.3); /* Light blue border */
+  box-shadow: 0 8px 12px rgba(0, 102, 204, 0.2); /* Soft blue glow effect */
   max-width: 600px;
   width: 100%;
   text-align: center;
+  padding: 2rem;
 }
 
 /* Improve Input Field and Button Styling */
@@ -341,7 +338,11 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .prediction-box button {
-  background: linear-gradient(45deg, #ff8c42, #ff3e55); /* Match HomePage Button */
+  background: linear-gradient(
+    45deg,
+    #f67d20,
+    #e65100
+  ); /* Match HomePage Button */
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -349,12 +350,9 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .prediction-box button:hover {
-  background: linear-gradient(45deg, #ff3e55, #ff8c42);
+  background: linear-gradient(45deg, #e65100, #f67d20);
   transform: scale(1.05);
 }
-
-
-
 
 /* ###################################################### */
 /* Add this to your CSS file or style tag */
@@ -362,7 +360,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #star-container {
@@ -383,18 +381,27 @@ body {
 }
 
 @keyframes twinkle {
-  0% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.2); }
-  100% { opacity: 0.3; transform: scale(1); }
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
 }
 
 /* Add shooting star effect */
 @keyframes shootingStar {
-  0% { 
+  0% {
     transform: translateX(0) translateY(0) rotate(0deg);
     opacity: 1;
   }
-  100% { 
+  100% {
     transform: translateX(200px) translateY(200px) rotate(45deg);
     opacity: 0;
   }
@@ -404,7 +411,11 @@ body {
   position: absolute;
   width: 2px;
   height: 2px;
-  background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1)
+  );
   box-shadow: 0 0 10px 2px white;
   border-radius: 50%;
   animation: shootingStar 2s linear infinite;
@@ -422,15 +433,19 @@ body {
 
 /* Message animation */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message-animation {
   animation: fadeIn 0.3s ease-out forwards;
 }
-
-
 
 /* ----------------------------------------------------- */
 .focus-container {
@@ -448,9 +463,7 @@ body {
   font-size: 3rem;
   font-weight: 900;
   cursor: pointer;
-  transition:
-    filter 0.3s ease,
-    color 0.3s ease;
+  transition: filter 0.3s ease, color 0.3s ease;
 }
 
 .focus-word.active {
@@ -503,4 +516,3 @@ body {
   border-left: none;
   border-top: none;
 }
-
