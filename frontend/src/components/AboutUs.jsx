@@ -157,7 +157,7 @@ const AboutUs = () => {
             </div>
 
             {/* Rotating Crates with Hover Effect */}
-{/*             <div 
+            <div 
               ref={cratesRef} 
               className="md:w-1/3 h-48 relative z-30 flex justify-center"
               onMouseEnter={() => setIsHovering(true)}
@@ -188,7 +188,7 @@ const AboutUs = () => {
                   </div>
                 </a>
               ))}
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
