@@ -36,7 +36,13 @@ const Navbar = ({ className }) => {
   };
 
   // Handle long-press event on the logo
-  const handleLogoMouseDown = () => {
+  const handleLogoMouseDown = (e) => {
+    // Only allow the clock feature for authenticated users
+    if (!isAuthenticated) return;
+    
+    // Prevent text selection on mobile
+    e.preventDefault();
+    
     pressDurationRef.current = 0;
     setIsHoldingLogo(true);
     timerRef.current = setInterval(() => {
@@ -59,7 +65,25 @@ const Navbar = ({ className }) => {
   };
 
   const handleLogoTouchStart = (e) => {
-    handleLogoMouseDown();
+    // Only allow the clock feature for authenticated users
+    if (!isAuthenticated) return;
+    
+    // Prevent default touch behavior to avoid text selection
+    e.preventDefault();
+    
+    pressDurationRef.current = 0;
+    setIsHoldingLogo(true);
+    timerRef.current = setInterval(() => {
+      pressDurationRef.current += 100;
+      setLogoProgress(Math.min(100, (pressDurationRef.current / 5000) * 100));
+      
+      if (pressDurationRef.current >= 5000) { // 5 seconds
+        clearInterval(timerRef.current);
+        setShowClock(true);
+        setLogoProgress(0);
+        setIsHoldingLogo(false);
+      }
+    }, 100);
   };
 
   const handleLogoTouchEnd = (e) => {
@@ -83,6 +107,13 @@ const Navbar = ({ className }) => {
   // CSS for the logo animation
   const logoAnimationStyle = {
     position: 'relative',
+    WebkitTouchCallout: 'none', /* iOS Safari */
+    WebkitUserSelect: 'none',   /* Safari */
+    KhtmlUserSelect: 'none',    /* Konqueror HTML */
+    MozUserSelect: 'none',      /* Firefox */
+    msUserSelect: 'none',       /* Internet Explorer/Edge */
+    userSelect: 'none',         /* Non-prefixed version */
+    cursor: isAuthenticated ? 'pointer' : 'default',
   };
 
   const logoProgressBarStyle = {
@@ -125,13 +156,14 @@ const Navbar = ({ className }) => {
             src={logo} 
             alt="image" 
             style={pulseStyle}
+            draggable="false"
           /> 
           <span 
             className="app-name"
             style={pulseStyle}
           >
             MEDS-AI
-            {isHoldingLogo && 
+            {isHoldingLogo && isAuthenticated && 
               <div className="secret-text" style={{
                 position: 'absolute',
                 top: '100%',
@@ -234,11 +266,13 @@ const Navbar = ({ className }) => {
         </ul>
       </header>
       
-      {/* The Death Clock Modal */}
-      <TheClockComponent 
-        isOpen={showClock} 
-        onClose={() => setShowClock(false)} 
-      />
+      {/* The Death Clock Modal - Only rendered if user is authenticated */}
+      {isAuthenticated && (
+        <TheClockComponent 
+          isOpen={showClock} 
+          onClose={() => setShowClock(false)} 
+        />
+      )}
     </>
   );
 };
